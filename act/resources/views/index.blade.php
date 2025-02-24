@@ -1,46 +1,114 @@
 @extends('bases')
+
 @section('title', 'Cars List')
+
 @section('content')
 <div class="container mt-4">
+    <h2 class="mb-3">Cars List</h2>
+    
+    <a href="{{ route('cars.create') }}" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i> Add New Car
+    </a>
 
-    <h2>Cars List</h2>
-    <a href="{{ route('cars.create') }}" class="btn btn-success">Add New Car</a>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
     @if($cars->isEmpty())
         <p class="alert alert-warning">No cars available.</p>
     @else
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Brand</th>
-                    <th>Year</th>
-                   <!-- <th>Actions</th>   -->
-               
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($cars as $car)
-                <tr>
-                    <td>{{ $car->id }}</td>
-                    <td>{{ $car->name }}</td>
-                    <td>{{ $car->brand }}</td>
-                    <td>{{ $car->year }}</td>
-                    <!--<td>
-                        <a href="{{ route('cars.edit', $car->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('cars.destroy', $car->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>... -->
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Brand</th>
+                        <th>Year</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cars as $car)
+                    <tr>
+                        <td>{{ $car->id }}</td>
+                        <td>{{ ucfirst($car->name) }}</td>
+                        <td>{{ ucfirst($car->brand) }}</td>
+                        <td>{{ $car->year }}</td>
+                        <td>
+                            <!-- Edit Button to Open Modal -->
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $car->id }}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+
+                            <!-- Delete Button to Open Modal -->
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $car->id }}">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Car Modal -->
+                    <div class="modal fade" id="editModal{{ $car->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $car->id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel{{ $car->id }}">Edit Car Info</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('cars.update', $car->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="mb-3">
+                                            <label class="form-label">Car Name</label>
+                                            <input type="text" name="name" class="form-control" value="{{ $car->name }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Brand</label>
+                                            <input type="text" name="brand" class="form-control" value="{{ $car->brand }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Year</label>
+                                            <input type="number" name="year" class="form-control" value="{{ $car->year }}" required>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="deleteModal{{ $car->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $car->id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ $car->id }}">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete <strong>{{ ucfirst($car->name) }}</strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form action="{{ route('cars.destroy', $car->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
 </div>
-
 @endsection
-
