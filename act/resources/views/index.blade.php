@@ -5,7 +5,7 @@
 @section('content')
 <div class="container mt-4">
     <h2 class="mb-3">Cars List</h2>
-    
+
     <a href="{{ route('cars.create') }}" class="btn btn-success mb-3">
         <i class="fas fa-plus"></i> Add New Car
     </a>
@@ -36,25 +36,25 @@
                         <td>{{ ucfirst($car->brand) }}</td>
                         <td>{{ $car->year }}</td>
                         <td>
-                            <!-- Edit Button to Open Modal -->
+                            <!-- Edit Button -->
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $car->id }}">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
 
-                            <!-- Delete Button to Open Modal -->
+                            <!-- Delete Button -->
                             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $car->id }}">
                                 <i class="fas fa-trash-alt"></i> Delete
                             </button>
                         </td>
                     </tr>
 
-                    <!-- Edit Car Modal -->
+                    <!-- Edit Modal -->
                     <div class="modal fade" id="editModal{{ $car->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $car->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editModalLabel{{ $car->id }}">Edit Car Info</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title">Edit Car Info</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="{{ route('cars.update', $car->id) }}" method="POST">
@@ -82,13 +82,13 @@
                         </div>
                     </div>
 
-                    <!-- Delete Confirmation Modal -->
+                    <!-- Delete Modal -->
                     <div class="modal fade" id="deleteModal{{ $car->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $car->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel{{ $car->id }}">Confirm Delete</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
                                     <p>Are you sure you want to delete <strong>{{ ucfirst($car->name) }}</strong>?</p>
@@ -110,5 +110,15 @@
             </table>
         </div>
     @endif
+
+    <!-- Logout Button at the Bottom -->
+    <div class="text-center mt-4">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    </div>
 </div>
 @endsection

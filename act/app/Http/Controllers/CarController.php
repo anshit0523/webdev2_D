@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CarController extends Controller
 {
 
     public function index()
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
         $cars = Car::all();
         return view('index', compact('cars'));
 
